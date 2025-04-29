@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Gestor Estudiantes UTA</title>
+    <link rel="stylesheet" href="stylesLogin.css" />
+
+    <script>
+        const usuario = JSON.parse(localStorage.getItem("usuario"));
+        if (usuario) {
+            // ✅ Solo mostramos si hay sesión activa
+            console.log("Rol del usuario autenticado:", usuario.Rol);
+            switch (usuario.Rol.toLowerCase()) {
+                case "admin":
+                    window.location.href = "index.html";
+                    break;
+                case "estudiante":
+                    window.location.href = "NotasEstudiantes.html";
+                    break;
+                case "profesor":
+                    window.location.href = "Profesores.html";
+                    break;
+                default:
+                    alert("Rol desconocido, cerrando sesión.");
+                    localStorage.removeItem("usuario");
+                    window.location.href = "login.html";
+                    break;
+            }
+        }
+    </script>
+
+</head>
+
+<body>
+    <div class="login-page">
+        <h1 class="login-title">Gestor Estudiantes UTA</h1>
+        <h3>Ingrese su Credencial</h3>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label class="login-label" for="first">Username:</label>
+                <input class="login-input" type="text" id="first" name="first" placeholder="Enter your Username" required />
+            </div>
+
+            <div class="input-group">
+                <label class="login-label" for="password">Password:</label>
+                <input class="login-input" type="password" id="password" name="password" placeholder="Enter your Password" required />
+            </div>
+
+            <div class="form-container">
+                <button type="submit" class="login-button">Login</button>
+            </div>
+        </form>
+
+        <p>
+            Not registered?
+            <a class="login-link" href="#" style="text-decoration: none;">Create an account</a>
+        </p>
+    </div>
+
+    <script>
+
+        document.getElementById("loginForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById("first").value;
+            const password = document.getElementById("password").value;
+
+            fetch("/api/Login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            })
+                .then(response => {
+                    if (response.ok) return response.json();
+                    throw new Error("Usuario o contraseña incorrectos");
+                })
+                .then(data => {
+                    console.log("Rol recibido desde backend:", data.rol); // 👀 verificar
+
+                    localStorage.setItem("usuario", JSON.stringify(data));
+
+                    switch (data.rol?.toLowerCase()) {
+                        case "admin":
+                            window.location.href = "index.html";
+                            break;
+                        case "estudiante":
+                            window.location.href = "NotasEstudiantes.html";
+                            break;
+                        case "profesor":
+                            window.location.href = "Profesores.html";
+                            break;
+                        default:
+                            alert("Rol desconocido, acceso denegado.");
+                            localStorage.removeItem("usuario");
+                            window.location.href = "login.html";
+                            break;
+                    }
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+        });
+    </script>
+
+</body>
+</html>

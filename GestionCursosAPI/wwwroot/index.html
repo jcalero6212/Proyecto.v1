@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Estudiantes y Profesores</title>
+
+    <script>
+        window.onload = function () {
+            const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+            // Si no está autenticado, redirige al login
+            if (!usuario) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            // Si el rol no es Admin, redirige a su página correspondiente
+            switch (usuario.Rol) {
+                case "admin":
+                    window.location.href = "index.html";
+                    break;
+                case "estudiante":
+                    window.location.href = "NotasEstudiantes.html";
+                    break;
+                case "profesor":
+                    window.location.href = "Profesores.html";
+                    break;
+                default:
+                    alert("Rol desconocido. Cerrando sesión.");
+                    localStorage.removeItem("usuario");
+                    window.location.href = "login.html";
+            }
+
+            console.log("Rol del usuario:", data.Rol);
+
+            // Mostrar mensaje si es Admin
+            const mensaje = document.getElementById("welcome-message");
+            if (mensaje) {
+                mensaje.innerHTML = `Bienvenido, ${usuario.Username} - Rol: ${usuario.Rol}`;
+            }
+        };
+
+        function logout() {
+            localStorage.removeItem("usuario");
+            window.location.href = "login.html";
+        }
+    </script>
+
+
+
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">GESTIÓN DE ESTUDIANTES</div>
+    <ul class="menu">
+      <li><a href="#" onclick="showStudents()">📚 Estudiantes</a></li>
+      <li><a href="#" onclick="showProfessors()">👨‍🏫 Profesores</a></li>
+      <li><a href="#" onclick="showCourses()">📘 Materias</a></li>
+      <li><a href="#" onclick="showStudentsInSubject()">📚 Nota</a></li>
+      <li><a href="#" onclick="mostrarAsignacion()">📚 Asignación</a></li>
+      <li><a href="#" onclick="showMatriculas()">📝 Matrículas</a></li>
+      
+      <li><a href="#">👤 Usuarios</a></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+      <div class="user-info">
+          <p><strong>Nombres</strong></p>
+          <p>Apellidos User</p>
+          <p>Cargo</p>
+          <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+
+      </div>
+
+
+
+
+      <!-- Estudiantes -->
+      <div id="students-list" class="section-card" style="display: none;">
+          <h2>Lista de Estudiantes</h2>
+
+          <div style="margin-bottom: 15px;">
+              <label for="carreraSelect"><strong>Filtrar por carrera:</strong></label>
+              <select id="carreraSelect" onchange="filtrarEstudiantesPorCarrera()">
+                  <option value="">-- Todas las carreras --</option>
+              </select>
+          </div>
+
+          <table>
+              <thead>
+                  <tr>
+                      <th>Cédula</th>
+                      <th>Nombre</th>
+                      <th>Apellido</th>
+                      <th>Fecha Nacimiento</th>
+                      <th>Gmail</th>
+                      <th>Dirección</th>
+                      <th>Teléfono</th>
+                      <th>Carrera</th>
+                      <th>Acciones</th>
+                  </tr>
+              </thead>
+              <tbody></tbody>
+          </table>
+          <button class="new-btn" onclick="mostrarFormularioEstudiante()">Nuevo Estudiante</button>
+      </div>
+
+      <div id="addStudentForm" style="display: none;">
+          <form id="estudianteForm">
+              <input type="text" id="id" placeholder="Cédula (ID)" maxlength="10" required oninput="validarCedula()" />
+
+              <!-- Nombre: Solo letras -->
+              <input type="text" id="nombre" placeholder="Nombre" required oninput="validarLetras('nombre')" />
+
+              <!-- Apellido: Solo letras -->
+              <input type="text" id="apellido" placeholder="Apellido" required oninput="validarLetras('apellido')" />
+
+              <!-- Fecha de nacimiento -->
+              <input type="date" id="fechaNacimiento" required />
+
+              <!-- Email -->
+              <input type="email" id="email" placeholder="Email" required />
+
+              <!-- Dirección -->
+              <input type="text" id="direccion" placeholder="Dirección" required />
+
+              <!-- Teléfono: Solo 10 números -->
+              <input type="text" id="telefono" placeholder="Teléfono" maxlength="10" required oninput="validarTelefono()" />
+
+              <!-- Carrera -->
+              <label for="carreraEstudiante">Carrera:</label>
+              <select id="carreraEstudiante" required>
+                  <option value="">-- Selecciona una carrera --</option>
+                  <option value="1">Carrera 1</option>
+                  <option value="2">Carrera 2</option>
+                  <option value="3">Carrera 3</option>
+              </select>
+
+              <button type="submit">Guardar Estudiante</button>
+          </form>
+          <p id="msgEstudiante" style="margin-top: 10px;"></p>
+      </div>
+
+      <script>
+          function validarCedula() {
+              const cedula = document.getElementById("id");
+              let cedulaValue = cedula.value;
+              cedulaValue = cedulaValue.replace(/[^0-9]/g, '');
+              if (cedulaValue.length > 10) {
+                  cedulaValue = cedulaValue.slice(0, 10);
+              }
+
+              cedula.value = cedulaValue;
+          }
+
+          function validarTelefono() {
+              const telefono = document.getElementById("telefono");
+              let telefonoValue = telefono.value;
+
+              telefonoValue = telefonoValue.replace(/[^0-9]/g, '');
+              if (telefonoValue.length > 10) {
+                  telefonoValue = telefonoValue.slice(0, 10);
+              }
+
+              telefono.value = telefonoValue;
+          }
+
+          function validarLetras(id) {
+              const input = document.getElementById(id);
+              let value = input.value;
+
+              value = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+
+              input.value = value;
+          }
+
+
+          document.getElementById("estudianteForm").addEventListener("submit", function (event) {
+              event.preventDefault();
+
+              const estudiante = {
+                  id: document.getElementById("id").value,
+                  nombre: document.getElementById("nombre").value,
+                  apellido: document.getElementById("apellido").value,
+                  fechaNacimiento: document.getElementById("fechaNacimiento").value,
+                  email: document.getElementById("email").value,
+                  direccion: document.getElementById("direccion").value,
+                  telefono: document.getElementById("telefono").value,
+                  carreraId: document.getElementById("carreraEstudiante").value,
+              };
+
+              if (estudiante.id && estudiante.nombre && estudiante.apellido && estudiante.fechaNacimiento && estudiante.email && estudiante.direccion && estudiante.telefono && estudiante.carreraId) {
+                  alert("Estudiante guardado correctamente");
+              } else {
+                  alert("Por favor, completa todos los campos.");
+              }
+          });
+      </script>
+
+
+
+
+      <!-- Profesores -->
+      <div id="professors-list" class="section-card" style="display: none;">
+          <h2>Lista de Profesores</h2>
+          <table>
+              <thead>
+                  <tr>
+                      <th>Cédula</th>
+                      <th>Nombre</th>
+                      <th>Apellido</th>
+                      <th>Fecha Nacimiento</th>
+                      <th>Gmail</th>
+                      <th>Dirección</th>
+                      <th>teléfono</th>
+                      <th>Acciones</th>
+                  </tr>
+              </thead>
+              <tbody></tbody>
+          </table>
+          <button class="new-btn" onclick="mostrarFormularioProfesor()">Nuevo Profesor</button>
+      </div>
+
+      <!-- Formulario para agregar un nuevo profesor -->
+      <div id="addProfessorForm" style="display: none;">
+          <form id="profesoresForm">
+              <!-- Cédula -->
+              <input type="text" id="idProfesor" placeholder="Cédula (ID)" required oninput="validarCedulaProfesor()" maxlength="10" />
+
+              <!-- Nombre -->
+              <input type="text" id="nombreProfesor" placeholder="Nombre" required oninput="validarLetras('nombreProfesor')" />
+
+              <!-- Apellido -->
+              <input type="text" id="apellidoProfesor" placeholder="Apellido" required oninput="validarLetras('apellidoProfesor')" />
+
+              <!-- Fecha de Nacimiento -->
+              <input type="date" id="fechaNacimientoProfesor" required />
+
+              <!-- Email -->
+              <input type="email" id="emailProfesor" placeholder="Email" required oninput="validarEmailProfesor()" />
+
+              <!-- Dirección -->
+              <input type="text" id="direccionProfesor" placeholder="Dirección" required />
+
+              <!-- Teléfono -->
+              <input type="text" id="telefonoProfesor" placeholder="Teléfono" required oninput="validarTelefonoProfesor()" maxlength="10" />
+
+              <!-- Botón de envío -->
+              <button type="submit">Guardar Profesor</button>
+          </form>
+          <div id="mensajeProfesores"></div>
+      </div>
+
+      <script>
+
+          function validarEmailProfesor() {
+              const emailInput = document.getElementById("emailProfesor");
+              const email = emailInput.value;
+
+              // Verificar que tenga al menos un @
+              if (!email.includes("@")) {
+                  emailInput.setCustomValidity("El correo debe contener @");
+              } else {
+                  emailInput.setCustomValidity(""); // Limpia el error si es válido
+              }
+          }
+
+
+          // Función para validar cédula del profesor (solo números y máximo 10 dígitos)
+          function validarCedulaProfesor() {
+              const cedulaProfesor = document.getElementById("idProfesor");
+              let cedulaValue = cedulaProfesor.value;
+
+              // Eliminar cualquier cosa que no sea un número
+              cedulaValue = cedulaValue.replace(/[^0-9]/g, '');
+
+              // Limitar a 10 caracteres
+              if (cedulaValue.length > 10) {
+                  cedulaValue = cedulaValue.slice(0, 10);
+              }
+
+              cedulaProfesor.value = cedulaValue;
+          }
+
+
+          // Función para validar teléfono del profesor (solo números y máximo 10 dígitos)
+          function validarTelefonoProfesor() {
+              const telefonoProfesor = document.getElementById("telefonoProfesor");
+              let telefonoValue = telefonoProfesor.value;
+
+              // Eliminar cualquier cosa que no sea un número
+              telefonoValue = telefonoValue.replace(/[^0-9]/g, '');
+
+              // Limitar a 10 caracteres
+              if (telefonoValue.length > 10) {
+                  telefonoValue = telefonoValue.slice(0, 10);
+              }
+
+              telefonoProfesor.value = telefonoValue;
+          }
+
+          // Función para validar que solo se ingresen letras (nombre y apellido)
+          function validarLetras(id) {
+              const input = document.getElementById(id);
+              let value = input.value;
+
+              // Eliminar todo lo que no sea letra, espacio o ñ
+              value = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+
+              input.value = value;
+          }
+
+      </script>
+
+
+
+      <!-- Cursos -->
+      <div id="courses-list" class="section-card" style="display: none;">
+          <h2>Lista de Cursos</h2>
+
+          <table>
+              <thead>
+                  <tr>
+                      <th>ID</th>
+                      <th>Nombre</th>
+                      <th>Crédito</th>
+                      <th>Acciones</th>
+                  </tr>
+              </thead>
+              <tbody></tbody>
+          </table>
+
+          <button class="new-btn" onclick="mostrarFormularioCurso()">Nuevo Curso</button>
+
+          <div id="formularioCurso" style="display: none; margin-top: 20px;">
+              <h3>Agregar Curso</h3>
+              <form id="courseForm" class="course-form">
+                  <input type="text" id="nombreCurso" placeholder="Nombre del curso" required />
+                  <input type="number" id="creditoCurso" placeholder="Créditos" required />
+                  <button type="submit" id="submitBtn">Guardar</button>
+              </form>
+              <p id="msg" style="margin-top: 10px;"></p>
+          </div>
+      </div>
+
+
+
+
+
+
+
+
+      <!-- 🔄 Sección de Asignación -->
+      <div id="asignacion-section" class="section-card" style="display: none;">
+          <h2 class="section-title">📚 Asignación de Materias a Carreras y Profesores</h2>
+
+          <!-- Tabla -->
+          <table class="asignacion-table">
+              <thead>
+                  <tr>
+                      <th>Carrera</th>
+                      <th>Materia</th>
+                      <th>Profesor</th>
+                      <th>Semestre</th>
+                      <th>Acciones</th>
+                  </tr>
+              </thead>
+              <tbody id="tablaAsignaciones">
+                  <!-- Filas dinámicas -->
+              </tbody>
+          </table>
+
+          <!-- Formulario -->
+          <h3 class="form-title">➕ Nueva Asignación</h3>
+          <form id="formAsignacion" class="asignacion-form">
+              <div class="form-group">
+                  <label for="carreraAsignacion">Carrera:</label>
+                  <select id="carreraAsignacion" required>
+                      <option value="">-- Selecciona una carrera --</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="materiaAsignacion">Materia:</label>
+                  <select id="materiaAsignacion" required>
+                      <option value="">-- Selecciona una materia --</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="profesorAsignacion">Profesor:</label>
+                  <select id="profesorAsignacion" required>
+                      <option value="">-- Selecciona un profesor --</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="semestreAsignacion">Semestre:</label>
+                  <input type="number" id="semestreAsignacion" min="1" max="12" required />
+              </div>
+
+              <div class="form-group full-width">
+                  <button type="submit" class="asignacion-btn">Guardar Asignación</button>
+              </div>
+          </form>
+
+          <div id="msgAsignacion" class="mensaje-estado"></div>
+      </div>
+
+
+
+
+      <!-- 🔍 Filtrado de Estudiantes por Materia -->
+      <div id="filter-students-by-subject" class="section-card" style="display: none;">
+          <h2 class="section-title">Filtrar Estudiantes por Materia</h2>
+
+          <form id="filterForm" class="asignacion-form">
+              <div class="form-group">
+                  <label for="filterCarrera">Carrera:</label>
+                  <select id="filterCarrera" required>
+                      <option value="">-- Selecciona una carrera --</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="filterSemestre">Semestre:</label>
+                  <select id="filterSemestre" required>
+                      <option value="">-- Selecciona un semestre --</option>
+                      <option value="1">1°</option>
+                      <option value="2">2°</option>
+                      <option value="3">3°</option>
+                      <option value="4">4°</option>
+                      <option value="5">5°</option>
+                      <option value="6">6°</option>
+                      <option value="7">7°</option>
+                      <option value="8">8°</option>
+                      <option value="9">9°</option>
+                      <option value="10">10°</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="filterMateria">Materia:</label>
+                  <select id="filterMateria" required>
+                      <option value="">-- Selecciona una materia --</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="filterProfesor">Profesor:</label>
+                  <select id="filterProfesor" required>
+                      <option value="">-- Selecciona un profesor --</option>
+                  </select>
+              </div>
+
+              <div class="form-group full-width">
+                  <button type="submit" class="asignacion-btn">Filtrar</button>
+              </div>
+          </form>
+
+          <div id="filteredStudentsList" class="filtered-results">
+              <h3>Estudiantes Filtrados</h3>
+              <table class="asignacion-table">
+                  <thead>
+                      <tr>
+                          <th>Cédula</th>
+                          <th>Nombre</th>
+                          <th>Apellido</th>
+                          <th>Fecha Nacimiento</th>
+                          <th>Gmail</th>
+                          <th>Dirección</th>
+                          <th>Teléfono</th>
+                          <th>Carrera</th>
+                          <th>Acciones</th>
+                      </tr>
+                  </thead>
+                  <tbody id="filteredStudentsTable"></tbody>
+              </table>
+          </div>
+      </div>
+
+
+
+
+
+      <!-- Sección de Ver Notas -->
+<div id="student-notes-section" style="display:none;">
+    <h2>Notas del Estudiante</h2>
+    <div id="student-details">
+        <!-- Aquí se mostrarán los detalles del estudiante -->
+    </div>
+
+    <h3>Notas Registradas:</h3>
+    <table id="student-notes-table">
+        <thead>
+            <tr>
+                <th>Nota 1</th>
+                <th>Nota 2</th>
+                <th>Promedio</th>
+                <th>Estado</th>
+                <th>Comentario</th>
+                <th>Acciones</th> <!-- Columna de Acciones -->
+            </tr>
+        </thead>
+        <tbody id="student-notes-body">
+            <!-- Aquí se agregarán las filas de notas -->
+        </tbody>
+    </table>
+
+    <div id="add-note-section">
+        <h3>Añadir Nueva Nota</h3>
+        <form id="add-note-form">
+            <div>
+                <label for="nota1">Nota 1:</label>
+                <input type="number" id="nota1" step="0.1" required>
+            </div>
+            <div>
+                <label for="nota2">Nota 2:</label>
+                <input type="number" id="nota2" step="0.1" required>
+            </div>
+            <div>
+                <label for="comentario">Comentario:</label>
+                <input type="text" id="comentario" required>
+            </div>
+            <button type="submit">Registrar Nota</button>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+      <!-- 📚 Sección de Matrícula -->
+      <div id="matricula-section" class="section-card" style="display: none;">
+          <h2 class="section-title">📚 Matricular Estudiante</h2>
+
+          <form id="matriculaForm" class="asignacion-form">
+
+              <div class="form-group">
+                  <label for="carrera">Carrera:</label>
+                  <select id="carrera" required>
+                      <option value="">-- Selecciona una carrera --</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="semestre">Semestre:</label>
+                  <select id="semestre" required>
+                      <option value="">-- Selecciona un semestre --</option>
+                      <option value="1">1°</option>
+                      <option value="2">2°</option>
+                      <option value="3">3°</option>
+                      <option value="4">4°</option>
+                      <option value="5">5°</option>
+                      <option value="6">6°</option>
+                      <option value="7">7°</option>
+                      <option value="8">8°</option>
+                      <option value="9">9°</option>
+                      <option value="10">10°</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="estudiante">Estudiante:</label>
+                  <select id="estudiante" required>
+                      <option value="">-- Selecciona un estudiante --</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="materia">Materia:</label>
+                  <select id="materia" required>
+                      <option value="">-- Selecciona una materia --</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="profesor">Profesor:</label>
+                  <select id="profesor" required>
+                      <option value="">-- Selecciona un profesor --</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="horario">Horario:</label>
+                  <select id="horario" required>
+                      <option value="Matutino">Matutino</option>
+                      <option value="Vespertino">Vespertino</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="fecha">Fecha de matrícula:</label>
+                  <input type="date" id="fecha" required>
+              </div>
+
+              <div class="form-group full-width">
+                  <button type="submit" class="asignacion-btn">✅ Matricular</button>
+              </div>
+          </form>
+
+          <div id="mensajeMatricula" class="info-message"></div>
+      </div>
+
+
+      <!-- 🔻 Scripts -->
+      <script>
+          // Ocultar todas las secciones excepto la que se desea mostrar
+          function ocultarTodo() {
+              const sections = [
+                  'students-list',
+                  'professors-list',
+                  'courses-list',
+                  'addStudentForm',
+                  'addProfessorForm',
+                  'formularioCurso',
+                  'asignacion-section',
+                  'matricula-section',
+                  'filter-students-by-subject',
+                  'student-notes-section'
+              ];
+
+              sections.forEach(section => {
+                  const element = document.getElementById(section);
+                  if (element) element.style.display = 'none';
+              });
+          }
+
+          // Funciones para mostrar secciones específicas
+          function showMatriculas() {
+              ocultarTodo();
+              document.getElementById('matricula-section').style.display = 'block';
+          }
+          // Función para mostrar la sección de "Estudiantes en Materia"
+          function showStudentsInSubject() {
+              ocultarTodo();
+              document.getElementById('filter-students-by-subject').style.display = 'block';
+          }
+
+          function showStudentNotes() {
+              ocultarTodo();
+              document.getElementById('student-notes-section').style.display = 'block'; // Luego mostramos solo la sección de notas
+          }
+
+          // Cargar carreras en los combos
+          document.addEventListener("DOMContentLoaded", function () {
+              fetch(`/api/carreras`)
+                  .then(response => response.json())
+                  .then(carreras => {
+                      const carreraSelect = document.getElementById("carrera");
+
+                      carreras.forEach(carrera => {
+                          const option = document.createElement("option");
+                          option.value = carrera.id;  // Asegúrate de usar el campo correcto
+                          option.textContent = carrera.nombre;  // Asegúrate de usar el campo correcto
+                          carreraSelect.appendChild(option);
+                      });
+                  })
+                  .catch(error => console.log("Error al obtener las carreras:", error));
+          });
+
+
+
+          // Cargar estudiantes según la carrera seleccionada
+          function cargarEstudiantes(carreraId) {
+              fetch(`/api/estudiantes/carrera/${carreraId}`)
+                  .then(response => response.json())
+                  .then(estudiantes => {
+                      const estudianteSelect = document.getElementById("estudiante");
+                      estudianteSelect.innerHTML = "<option value=''>-- Selecciona un estudiante --</option>";
+
+                      estudiantes.forEach(estudiante => {
+                          const option = document.createElement("option");
+                          option.value = estudiante.id;
+                          option.textContent = `${estudiante.nombre} ${estudiante.apellido}`;  // Asegúrate de usar los campos correctos
+                          estudianteSelect.appendChild(option);
+                      });
+                  })
+                  .catch(error => console.log("Error al obtener estudiantes:", error));
+          }
+
+          // Cargar materias según la carrera y semestre seleccionados
+          function cargarMaterias(carreraId, semestre) {
+              fetch(`/api/cursos/carrera/${carreraId}/semestre/${semestre}`)
+                  .then(response => response.json())
+                  .then(materias => {
+                      const materiaSelect = document.getElementById("materia");
+                      materiaSelect.innerHTML = "<option value=''>-- Selecciona una materia --</option>";
+
+                      materias.forEach(materia => {
+                          const option = document.createElement("option");
+                          option.value = materia.id;
+                          option.textContent = materia.nombre;
+                          materiaSelect.appendChild(option);
+                      });
+                  })
+                  .catch(error => console.log("Error al obtener materias:", error));
+          }
+
+          // Cargar profesores según la materia seleccionada
+          function cargarProfesores(materiaId) {
+              fetch(`/api/profesores/materia/${materiaId}`)
+                  .then(response => response.json())
+                  .then(profesores => {
+                      const profesorSelect = document.getElementById("profesor");
+                      profesorSelect.innerHTML = "<option value=''>-- Selecciona un profesor --</option>";
+
+                      profesores.forEach(profesor => {
+                          const option = document.createElement("option");
+                          option.value = profesor.id;
+                          option.textContent = profesor.nombre;
+                          profesorSelect.appendChild(option);
+                      });
+                  })
+                  .catch(error => console.log("Error al obtener profesores:", error));
+          }
+
+          // Agregar eventos para manejar los cambios de los select
+          document.getElementById('carrera').addEventListener('change', function () {
+              const carreraId = this.value;
+              cargarEstudiantes(carreraId);
+              document.getElementById('materia').innerHTML = "<option value=''>-- Selecciona una materia --</option>";
+              document.getElementById('profesor').innerHTML = "<option value=''>-- Selecciona un profesor --</option>";
+          });
+
+          document.getElementById('semestre').addEventListener('change', function () {
+              const carreraId = document.getElementById('carrera').value;
+              const semestre = this.value;
+              if (carreraId && semestre) {
+                  cargarMaterias(carreraId, semestre);
+              }
+          });
+
+          document.getElementById('materia').addEventListener('change', function () {
+              const materiaId = this.value;
+              if (materiaId) {
+                  cargarProfesores(materiaId);
+              }
+          });
+      </script>
+
+
+
+
+      <script src="script.js"></script>
+</body>
+</html>

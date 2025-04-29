@@ -1,0 +1,342 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asignación de Notas - Profesor</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .btn-cargar-cursos {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+
+            .btn-cargar-cursos:hover {
+                background-color: #1d4ed8;
+            }
+
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background-color: #1f2937;
+            color: white;
+            position: fixed;
+            height: 100%;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+            .sidebar .logo {
+                font-size: 25px;
+                font-weight: bold;
+                margin-bottom: 24px;
+            }
+
+    .sidebar .menu {
+        list-style: none;
+    }
+
+    .sidebar .menu li {
+        margin: 16px 0;
+    }
+
+    .sidebar .menu li a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        padding: 10px;
+        border-radius: 4px;
+    }
+
+        .sidebar .menu li a:hover {
+            background-color: #374151;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 240px;
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1f2937;
+            color: white;
+            padding: 12px 24px;
+            border-bottom: 2px solid #111827;
+        }
+
+        .user-info {
+            text-align: right;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background-color: #ef4444;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+            width: auto;
+        }
+            .logout-btn:hover {
+                background-color: #dc2626;
+                transform: scale(1.05);
+            }
+
+
+            .logout-btn:hover {
+                background-color: #dc2626;
+            }
+
+        /* Carrera select */
+        .form-group {
+            margin: 20px 0;
+        }
+
+            .form-group label {
+                font-weight: 600;
+                display: block;
+                margin-bottom: 6px;
+            }
+
+            .form-group select {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #d1d5db;
+                border-radius: 4px;
+            }
+
+        .logo {
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #6d31de;
+            font-family: 'Poppins', 'Times New Roman'; /* Nueva fuente */
+            letter-spacing: 3px;
+        }
+
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .menu li {
+                margin: 10px 0;
+            }
+
+            .menu a {
+                display: block;
+                padding: 12px 20px;
+                color: white;
+                text-decoration: none;
+                transition: background-color 0.2s ease, padding-left 0.2s ease;
+                border-left: 4px solid transparent;
+            }
+
+        /* Card y tabla */
+        .section-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 16px;
+            color: #374151;
+        }
+
+        .asignacion-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .asignacion-table th,
+            .asignacion-table td {
+                border: 1px solid #e5e7eb;
+                padding: 10px;
+                text-align: left;
+            }
+
+            .asignacion-table th {
+                background-color: #f9fafb;
+                font-weight: 600;
+            }
+
+        .menu a:hover {
+            background-color: #374151;
+            padding-left: 24px;
+            border-left: 4px solid #3b82f6; /* Azul clarito como highlight */
+            color: #e5e7eb;
+        }
+
+        /* Modal */
+        .nota-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.3);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nota-modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+        }
+
+        .close-btn {
+            float: right;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .user-name,
+        .user-role {
+            display: block;
+            margin: 2px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">Sistema Educativo</div>
+        <ul class="menu">
+            <li><a href="professors.html">Profesores</a></li>
+            <li><a href="students.html">Estudiantes</a></li>
+            <li><a href="#" id="ver-cursos">Cursos</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Navbar -->
+        <div class="navbar">
+
+            <div class="user-info">
+                <span class="user-name" id="user-name">👤 Usuario</span>
+                <span class="user-role" id="user-role">Rol: --</span>
+            </div>
+            <button onclick="logout()" class="logout-btn">🔓 Cerrar Sesión</button>
+        </div>
+
+
+        <div id="cursos-container" style="display: none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asignatura</th>
+                        <th>Semestre</th>
+                        <th>Carrera</th>
+                    </tr>
+                </thead>
+                <tbody id="cursos-body">
+                    <!-- Los cursos se agregarán aquí -->
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+
+        <!-- Selector de carrera -->
+        <div class="form-group" id="carrera-selector">
+            <label for="carrera-select">Selecciona la carrera:</label>
+            <select id="carrera-select" onchange="filtrarPorCarrera()">
+                <option value="">-- Seleccionar --</option>
+                <!-- Opciones se cargan dinámicamente -->
+            </select>
+        </div>
+
+
+        <!-- Tabla de notas -->
+        <div class="section-card" id="notas-container">
+            <!-- Agregamos id aquí -->
+            <h3 class="section-title">Asignación de Notas</h3>
+            <table class="asignacion-table">
+                <thead>
+                    <tr>
+                        <th>Asignatura</th>
+                        <th>Semestre</th>
+                        <th>Estudiante</th>
+                        <th>Nota 1</th>
+                        <th>Nota 2</th>
+                        <th>Promedio</th>
+                        <th>Estado</th>
+                        <th>Comentarios</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="grades-table-body">
+                    <!-- JS lo llena -->
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+    <!-- Modal para editar nota -->
+    <div class="nota-modal" id="nota-modal">
+        <div class="nota-modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3>Editar Nota</h3>
+            <form id="edit-grade-form">
+                <label for="nota1">Nota 1</label>
+                <input type="number" id="nota1" name="nota1" required min="0" max="10" />
+                <br /><br />
+                <label for="nota2">Nota 2</label>
+                <input type="number" id="nota2" name="nota2" required min="0" max="10" />
+                <br /><br />
+                <button type="submit" class="asignacion-btn">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+    <script src="scriptProfesores.js"></script>
+</body>
+</html>

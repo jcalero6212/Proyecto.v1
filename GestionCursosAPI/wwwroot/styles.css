@@ -1,0 +1,520 @@
+/* Estilos Generales */
+body {
+    background-color: #f9fafb;
+    color: #1f2937;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 160px;
+    background-color: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    padding: 40px 20px;
+    position: fixed; /* Fija el sidebar */
+    top: 0; /* Lo mantiene en la parte superior */
+    left: 0; /* Alineado a la izquierda */
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+    overflow-y: auto; /* Permite el desplazamiento si el contenido es más largo */
+}
+
+.logo {
+    font-size: 24px; /* Aumenta el tamaño de la fuente */
+    font-weight: 800; /* Aumenta el grosor para hacerlo más llamativo */
+    margin-bottom: 40px;
+    color: #111827; /* Color oscuro para la legibilidad */
+    text-transform: uppercase; /* Para hacer que las letras estén en mayúsculas */
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    margin: 16px 0;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #374151; 
+    font-weight: 700; 
+    font-size: 20px; /* Tamaño de fuente ligeramente más grande */
+    transition: color 0.3s ease;
+}
+
+.menu a:hover {
+    color: #2563eb; /* Color azul al pasar el ratón */
+}
+
+.main-content {
+    flex-grow: 1;
+    background-color: #f3f4f6;
+    padding: 30px 50px;
+    margin-left: 160px; /* Deja espacio para el sidebar fijo */
+}
+
+.students-list,
+.professors-list,
+.courses-list {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+th {
+    background-color: #f9fafb;
+    color: #374151;
+    font-weight: 600;
+}
+
+td {
+    background-color: #ffffff;
+    color: #4b5563;
+}
+
+.logout-btn {
+    background-color: #ef4444;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 14px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+    background-color: #dc2626;
+}
+
+
+
+.edit-btn {
+    color: #2563eb;
+    border-color: #2563eb;
+}
+
+.delete-btn {
+    color: #dc2626;
+    border-color: #dc2626;
+}
+
+.new-btn {
+    background-color: #10b981;
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 10px 18px;
+}
+
+.clock {
+    font-size: 36px;
+    font-weight: 600;
+    color: #2563eb;
+    margin-bottom: 10px;
+}
+
+.date {
+    font-size: 16px;
+    color: #6b7280;
+}
+
+
+/* Estilos para la página de Login */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 900;
+    color: #2563eb;
+    text-transform: uppercase;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+    font-size: 16px;
+    color: #374151;
+    background-color: #f9fafb;
+}
+
+.input-group input:focus {
+    border-color: #2563eb;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 1px;
+    border-radius: 4px;
+    border: 1px solid #10b981;
+    background-color: #10b981;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #059669;
+}
+
+.error-message {
+    color: #dc2626;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.student-form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin-top: 20px;
+}
+
+.student-form input,
+.student-form select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.student-form button[type="submit"] {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-weight: 600;
+    border-radius: 4px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.student-form button[type="submit"]:hover {
+    background-color: #1d4ed8;
+}
+.section-card {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+
+.professor-form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin-top: 20px;
+}
+
+.professor-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.professor-form button[type="submit"] {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-weight: 600;
+    border-radius: 4px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.professor-form button[type="submit"]:hover {
+    background-color: #1d4ed8;
+}
+
+.course-form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+    max-width: 400px;
+}
+
+.course-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.course-form button {
+    background-color: #10b981;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: auto;
+    margin-top: 10px;
+}
+
+.course-form button:hover {
+    background-color: #059669;
+}
+.section-card {
+    background-color: #1c1c1c;
+    color: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.section-title,
+.form-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.asignacion-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #2a2a2a;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.asignacion-table th,
+.asignacion-table td {
+    padding: 10px;
+    border: 1px solid #444;
+    text-align: left;
+}
+
+.asignacion-table thead tr {
+    background-color: #333;
+}
+
+.asignacion-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.form-group {
+    flex: 1 1 45%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    flex: 1 1 100%;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group select,
+.form-group input {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #aaa;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 14px;
+}
+
+.asignacion-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #0a84ff;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.asignacion-btn:hover {
+    background-color: #006ad1;
+}
+
+.mensaje-estado {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Barra superior */
+.header {
+  background-color: #2c3e50;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Imagen de perfil */
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+/* Nombre de usuario */
+.user-name {
+  color: white;
+  font-size: 16px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+/* Menú del perfil */
+.user-menu {
+  display: none;
+  position: absolute;
+  right: 20px;
+  top: 50px;
+  background-color: #34495e;
+  padding: 15px;
+  border-radius: 5px;
+  width: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: white;
+  font-size: 14px;
+}
+
+/* Estilos de los enlaces del menú */
+.user-menu a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  padding: 5px 0;
+  font-size: 14px;
+}
+
+.user-menu a:hover {
+  background-color: #1abc9c;
+  border-radius: 4px;
+}
+
+.user-profile:hover .user-menu {
+  display: block;
+}
+
+.user-profile {
+  position: relative;
+  cursor: pointer;
+}
+
+.nota-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.nota-modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.logout-btn.small {
+    padding: 6px 10px;
+    font-size: 13px;
+    margin-left: 10px;
+}
+
+.user-role {
+    font-size: 14px;
+    color: #cbd5e1;
+}
